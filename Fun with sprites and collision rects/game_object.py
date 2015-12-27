@@ -1,4 +1,5 @@
 import pygame as pyg
+import character_con as chara
 from spritesheet import *
 
 class GlorifiedSprite(pyg.sprite.Sprite):
@@ -8,13 +9,14 @@ class GlorifiedSprite(pyg.sprite.Sprite):
 	image_index = 0
 	direction = "R"
 
-	def __init__(self):
+	def __init__(self, character):
 		super(GlorifiedSprite, self).__init__()
 		self.init_frames()
 		self.image = self.all_frames_R[self.image_index]
 		self.rect = self.image.get_rect()
 		self.rect.x = 40
 		self.rect.y = 40
+		self.drawing_axis = character["AXIS"]
 		
 	def init_frames(self):
 		sprite_sheet = SpriteSheet("img/nov2015_spritesheet_2.png")
@@ -37,6 +39,14 @@ class GlorifiedSprite(pyg.sprite.Sprite):
 			
 	def draw(self, surface):
 		surface.blit(self.image, self.rect)
+		
+	def flip_image(self):
+		if self.direction == "R":
+			self.direction = "L"
+			self.image = self.all_frames_L[self.image_index]
+		else:
+			self.direction = "R"
+			self.image = self.all_frames_R[self.image_index]
 		
 	def next_image(self):
 		self.image_index += 1

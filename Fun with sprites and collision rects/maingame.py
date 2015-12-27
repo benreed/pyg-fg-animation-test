@@ -10,6 +10,7 @@ import sys
 
 import pygame as pyg
 import constants as con
+import character_con as chara
 from game_object import *
 
 # -------- Global constants --------
@@ -42,7 +43,7 @@ class App:
 		self.done = False
 		self.keys = pyg.key.get_pressed()
 		# Instantiate game object members here
-		self.sprite = GlorifiedSprite()
+		self.sprite = GlorifiedSprite(chara.PHOEBE)
 		
 	def event_loop(self):
 		"""
@@ -61,6 +62,9 @@ class App:
 					# Left key: Previous image in list
 					elif event.key == pyg.K_LEFT:
 						self.sprite.prev_image()
+					# Down key: Flip sprite direction
+					elif event.key == pyg.K_DOWN:
+						self.sprite.flip_image()
 				
 	def render(self):
 		"""
@@ -76,6 +80,7 @@ class App:
 		# Draw rects
 		if self.debug:
 			pyg.draw.rect(self.screen, con.GREEN, self.sprite.rect, 1)
+			pyg.draw.line(self.sprite.image, con.WHITE, (self.sprite.drawing_axis, self.sprite.rect.y), (self.sprite.drawing_axis, self.sprite.rect.height), 1)
 		
 		# Flip display
 		pyg.display.flip()
