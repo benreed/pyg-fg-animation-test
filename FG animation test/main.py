@@ -1,6 +1,7 @@
 """
-Utility for testing character animation and rect members
-Written Dec 26, 2015 by Benjamin Reed
+Pseudo-utility to test animation implementation for 
+fighting game prototype
+Written Dec 18, 2015 by Benjamin Reed
 	
 Credit for this implementation goes to Sean J. McKiernan
 (Mekire) at /r/pygame
@@ -10,15 +11,14 @@ import sys
 
 import pygame as pyg
 import constants as con
-import character_con as chara
 from game_object import *
 
 # -------- Global constants --------
 # Game window caption
-WINDOW_CAPTION = "Animation test"
+WINDOW_CAPTION = "Animation Test"
 
 # Game window dimensions
-SCREEN_SIZE = (200, 200)
+SCREEN_SIZE = (800, 600)
 
 # Target frame rate
 TARGET_FPS = 60
@@ -29,6 +29,7 @@ class App:
 	including initialization, event handling, and state 
 	updates
 	"""
+	# Debug flag
 	debug = True
 	
 	def __init__(self):
@@ -43,7 +44,7 @@ class App:
 		self.done = False
 		self.keys = pyg.key.get_pressed()
 		# Instantiate game object members here
-		self.sprite = GlorifiedSprite(chara.PHOEBE)
+		self.player = PlayerCharacter(con.PHOEBE)
 		
 	def event_loop(self):
 		"""
@@ -55,16 +56,6 @@ class App:
 				self.done = True
 			elif event.type in (pyg.KEYUP, pyg.KEYDOWN):
 				self.keys = pyg.key.get_pressed()
-				if event.type == pyg.KEYDOWN:
-					# Right key: Next image in list
-					if event.key == pyg.K_RIGHT:
-						self.sprite.next_image()
-					# Left key: Previous image in list
-					elif event.key == pyg.K_LEFT:
-						self.sprite.prev_image()
-					# Down key: Flip sprite direction
-					elif event.key == pyg.K_DOWN:
-						self.sprite.flip_image()
 				
 	def render(self):
 		"""
@@ -72,19 +63,21 @@ class App:
 		the display
 		"""
 		# Wipe frame 
-		self.screen.fill(con.BG_COLOR)
+		self.screen.fill(con.BG_COLOR) 
 		
-		# Draw sprite
-		self.sprite.draw(self.screen)
+		# Draw level
 		
-		# Draw rects, axes, etc
+		# Draw game objects
+		self.player.draw(self.screen)
+		pyg.draw.rect(self.player.current_frame.image, con.WHITE, self.player.current_frame.rect, 1)
 		if self.debug:
-			#pyg.draw.rect(self.screen, con.GREEN, self.sprite.rect, 1)
-			pyg.draw.line(self.sprite.image, con.WHITE, (self.sprite.drawing_axis, 0), (self.sprite.drawing_axis, self.sprite.rect.height), 1)
-			pyg.draw.rect(self.sprite.image, con.GREEN, (self.sprite.drawing_axis-10, 114-65, 20, 25), 1)
-			pyg.draw.rect(self.sprite.image, con.GREEN, (self.sprite.drawing_axis-12, 114-40, 27, 40), 1)
+			for rect in self.player.current_frame.rects:
+				if rect.type == "Sprite":
+					pyg.draw.rect(self.player.current_frame.image, con.GREEN, (rect.x, rect.y, rect.width, rect.height), 1)
+				elif rect.type == "Vuln":
+					pyg.draw.rect(self.player.current_frame.image, con.BLUE, (rect.x, rect.y, rect.width, rect.height), 1)
 		
-		# Flip display
+		# Update display
 		pyg.display.flip()
 		
 	def main_loop(self):
