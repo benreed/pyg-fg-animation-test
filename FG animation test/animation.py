@@ -11,6 +11,7 @@ programarcadegames.com
 import pygame as pyg
 import constants as con
 
+#class RectWithType(object):
 class RectWithType(pyg.Rect):
 	"""
 	Class representing a collision rect with 
@@ -24,24 +25,35 @@ class RectWithType(pyg.Rect):
 	#def __init__(self, (type, x, y, width, height)):
 	def __init__(self, rect):
 		super(RectWithType, self).__init__(rect[1], rect[2], rect[3], rect[4])
+		#self.rect = pyg.Rect(rect[1], rect[2], rect[3], rect[4])
 		self.type = rect[0]
+		#self.x = rect[1]
+		#self.y = rect[2]
+		#self.width = rect[3]
+		#self.height = rect[4]
 
 class AnimationFrame(pyg.sprite.Sprite):
 	"""
 	Class representing a frame of animation
 	and its associated collision rects
 	"""
-	image = None
-	rects = []
+	#image = None
+	#rects = []
 
 	#def __init__(self, image, name, rects):
 	def __init__(self, image, rects):
 		super(AnimationFrame, self).__init__()
 		self.image = image
+		self.rects = []
 		#self.name = name
 		self.rect = self.image.get_rect()
+		print "I'm a frame and these are my rects: "
+		print self.rects
 		for rect in rects:
+			#print str(rect)
 			self.rects.append(rect)
+		print "After initialization:"
+		print self.rects
 		
 class SpriteSheet(object):
 	sprite_sheet = None

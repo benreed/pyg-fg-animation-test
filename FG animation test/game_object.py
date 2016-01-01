@@ -7,10 +7,11 @@ class PlayerCharacter(object):
 	anim_frames_L = []
 	direction = "R"
 	current_frame = None
+	frame_index = 0
 	
 	def __init__(self, chara):
 		self.load_frames(chara)
-		self.current_frame = self.anim_frames_R[0]
+		self.current_frame = self.anim_frames_R[1]
 		print "All rects in current frame:"
 		for element in self.current_frame.rects:
 			print str(element)
@@ -30,9 +31,6 @@ class PlayerCharacter(object):
 			image = sprite_sheet.get_image(originX, originY, image_width, image_height)
 			name = str(chara["ANIMS"][0])
 			rects = []
-			print "All rects in rects list: "
-			for element in rects:
-				print str(element)
 			
 			# Make typed rects 
 			#print "Length: " + str(len(chara["ANIMS"]))
@@ -54,3 +52,8 @@ class PlayerCharacter(object):
 			self.anim_frames_R.append(frame)
 			
 			originX += image_width
+			
+	def next_frame(self):
+		self.frame_index += 1
+		if self.frame_index > len(anim_frames_R):
+			self.frame_index = 0
